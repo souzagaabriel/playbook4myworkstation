@@ -43,6 +43,17 @@
     # End packages with snap
 
     # Install some packages with dnf
+    - name: Install the latest version packages with external links
+      dnf:
+        name: 
+          - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-32.noarch.rpm
+          - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-32.noarch.rpm
+          - https://dl.strem.io/shell-linux/v4.4.116/stremio-4.4.116-1.fc31.x86_64.rpm
+          - https://download.teamviewer.com/download/linux/teamviewer.x86_64.rpm
+          - https://zoom.us/client/latest/zoom_x86_64.rpm
+        update_cache: yes
+        state: latest
+
     - name: Install the latest version packages dnf
       dnf:
         name: 
@@ -57,19 +68,9 @@
           - sqlite-devel.x86_64 
           - readline-devel.x86_64 
           - bzip2-devel.x86_64
-        state: latest
-
-    - name: Install the latest version packages with external links
-      dnf:
-        name: 
-          - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-32.noarch.rpm
-          - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-32.noarch.rpm
           - ffmpeg
           - ffmpeg-devel
-          - https://dl.strem.io/shell-linux/v4.4.116/stremio-4.4.116-1.fc31.x86_64.rpm
-          - https://download.teamviewer.com/download/linux/teamviewer.x86_64.rpm
-          - https://zoom.us/client/latest/zoom_x86_64.rpm
-        update_cache: yes
+          - gnome-tweaks
         state: latest
     # End packages with dnf
 
