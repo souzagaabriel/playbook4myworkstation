@@ -62,12 +62,10 @@
     - name: Install the latest version packages with external links
       dnf:
         name: 
-          # - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-32.noarch.rpm
-          # - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-32.noarch.rpm
-          # - rpmfusion-free-release
-          # - rpmfusion-nonfree-release-32-1.noarch
-          # - ffmpeg
-          # - ffmpeg-devel
+          - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-32.noarch.rpm
+          - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-32.noarch.rpm
+          - ffmpeg
+          - ffmpeg-devel
           - https://dl.strem.io/shell-linux/v4.4.116/stremio-4.4.116-1.fc31.x86_64.rpm
           - https://download.teamviewer.com/download/linux/teamviewer.x86_64.rpm
           - https://zoom.us/client/latest/zoom_x86_64.rpm
@@ -116,8 +114,17 @@
     # End VSCode
 
 
-    # Install Docker
-    
+    # Config Docker
+    - name: Ensure group "somegroup" exists
+      group:
+        name: docker
+        state: present
 
+    - name: Add the user 'souzagaabriel' to the group 'docker'
+      user:
+        name: souzagaabriel
+        groups: docker
+        append: yes
+    # End Docker
 
 
