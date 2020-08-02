@@ -1,0 +1,123 @@
+# 1º Enable Google Chrome repository
+
+- hosts: localhost
+  tasks:
+  
+    # Install and config snap
+    - name: Install the latest version packages snapd
+      dnf:
+        name: 
+          - snapd
+        state: latest
+
+    - name: Create a symbolic link to snap
+      file:
+        src: /var/lib/snapd/snap
+        dest: /snap
+        state: link
+    # End Snap
+
+    # Install some packages with snap
+    - name: Install rambox and node with snap option --classic
+      snap:
+        name: 
+          - rambox
+          - node
+        classic: yes
+        
+    - name: Install Authy with snap with beta channel
+      snap:
+        name: authy
+        channel: beta
+        
+    - name: Install obs-studio with snap
+      snap:
+        name: obs-studio
+        
+    - name: Install snap packages
+      snap:
+        name: 
+          - spotify
+          - vlc
+          - docker
+    # End packages with snap
+
+    # Install some packages with dnf
+    - name: Install the latest version packages dnf
+      dnf:
+        name: 
+          - google-chrome-stable
+          - awscli
+          - make
+          - '@Development tools'
+          - zlib-devel 
+          - openssl-devel 
+          - ncurses-devel 
+          - libffi-devel
+          - sqlite-devel.x86_64 
+          - readline-devel.x86_64 
+          - bzip2-devel.x86_64
+        state: latest
+
+    - name: Install the latest version packages with external links
+      dnf:
+        name: 
+          # - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-32.noarch.rpm
+          # - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-32.noarch.rpm
+          # - rpmfusion-free-release
+          # - rpmfusion-nonfree-release-32-1.noarch
+          # - ffmpeg
+          # - ffmpeg-devel
+          - https://dl.strem.io/shell-linux/v4.4.116/stremio-4.4.116-1.fc31.x86_64.rpm
+          - https://download.teamviewer.com/download/linux/teamviewer.x86_64.rpm
+          - https://zoom.us/client/latest/zoom_x86_64.rpm
+        update_cache: yes
+        state: latest
+    # End packages with dnf
+
+    # Terraform
+    - name: return motd to registered var
+      shell: |
+        curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\,\v | awk '{$1=$1};1'
+      register: TER_VER
+      ignore_errors: yes 
+
+    - set_fact: 
+        TER_VER={{ TER_VER.stdout }}
+
+    - name: Extract terraform*.tgz into /usr/local/bin/
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/{{ TER_VER }}/terraform_{{ TER_VER }}_linux_amd64.zip
+        dest: /usr/local/bin/
+        remote_src: yes
+    # End Terraform
+
+    # VSCode
+    - rpm_key:
+        state: present
+        key: https://packages.microsoft.com/keys/microsoft.asc
+
+    - name: Add code repositories
+      yum_repository:
+        name: vscode
+        description: Visual Studio Code
+        file: external_repos
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgcheck: yes
+        enabled: yes
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+    - name: Install the latest version vscode
+      dnf:
+        name: 
+          - code
+        update_cache: yes
+        state: latest
+    # End VSCode
+
+
+    # Install Docker
+    
+
+
+
