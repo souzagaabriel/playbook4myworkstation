@@ -1,10 +1,10 @@
 - hosts: localhost
   tasks:
-  
+
     # Install and config snap
     - name: Install the latest version packages snapd
       dnf:
-        name: 
+        name:
           - snapd
         state: latest
 
@@ -33,25 +33,33 @@
     - name: Install the latest version packages dnf
       dnf:
         name:
-          - lpf-spotify-client 
-          - obs-studio
-          - google-chrome-stable
-          - make
-          - gnome-tweaks
-          - postbird
-          - vlc
+          - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-33.noarch.rpm
+          - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-33.noarch.rpm
           - https://github.com/ramboxapp/community-edition/releases/download/0.7.7/Rambox-0.7.7-linux-x86_64.rpm
           - https://download.teamviewer.com/download/linux/teamviewer.x86_64.rpm
           - https://zoom.us/client/latest/zoom_x86_64.rpm
           - https://github.com/Ulauncher/Ulauncher/releases/download/5.10.0/ulauncher_5.10.0_fedora33.rpm
         state: latest
+        disable_gpg_check: yes
+
+    - name: Install the latest version packages dnf
+      dnf:
+        name:
+          - lpf-spotify-client
+          - obs-studio
+          - google-chrome-stable
+          - make
+          - gnome-tweaks
+          - vlc
+        state: latest
+
     # End packages with dnf
 
     # Stremio
     - name: Install the Stremio flatpak
-      community.general.flatpak:
-        name:  com.stremio.Stremio
-        state: present    
+      flatpak:
+        name: https://dl.flathub.org/repo/appstream/com.stremio.Stremio.flatpakref
+        state: present
     # End Stremio
 
     # Virtualization
@@ -65,16 +73,16 @@
       dnf:
         name: '@virtualization'
         state: latest
-    # End Virtualization       
+    # End Virtualization
 
     # Helm
     - name: return motd to registered var
       shell: |
         curl -s https://api.github.com/repos/helm/helm/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\, | awk '{$1=$1};1'
       register: HELM_VER
-      ignore_errors: yes 
+      ignore_errors: yes
 
-    - set_fact: 
+    - set_fact:
         HELM_VER={{ HELM_VER.stdout }}
 
     - name: Extract helm*.tar.gz into /tmp
@@ -102,9 +110,9 @@
         src: /tmp/eksctl
         dest: /usr/local/bin/eksctl
         mode: +x
-    # End eksctl    
+    # End eksctl
 
-    # VSCode 
+    # VSCode
     - rpm_key:
         state: present
         key: https://packages.microsoft.com/keys/microsoft.asc
@@ -121,7 +129,7 @@
 
     - name: Install the latest version vscode
       dnf:
-        name: 
+        name:
           - code
         update_cache: yes
         state: latest
@@ -132,24 +140,24 @@
       get_url:
         url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
         dest: /etc/yum.repos.d/hashicorp.repo
-        mode: '0644'    
+        mode: '0644'
 
     - name: Install the latest version terraform
       dnf:
-        name: 
+        name:
           - terraform
         update_cache: yes
         state: latest
     # End Terraform
 
-    # # Terraform old install 
+    # # Terraform old install
     # - name: return motd to registered var
     #   shell: |
     #     curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\,\v | awk '{$1=$1};1'
     #   register: TER_VER
-    #   ignore_errors: yes 
+    #   ignore_errors: yes
 
-    # - set_fact: 
+    # - set_fact:
     #     TER_VER={{ TER_VER.stdout }}
 
     # - name: Extract terraform*.tgz into /usr/local/bin/
@@ -159,5 +167,68 @@
     #     remote_src: yes
     # # End Terraform old install
 
-#kubectl
 
+    # Docker
+    - name: Add docker-ce repo with dnf config-manager
+      shell: |
+        dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+      ignore_errors: yes
+      args:
+        creates: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install the latest version docker
+      dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        update_cache: yes
+        state: latest
+
+    - name: Ensure group "docker" exists
+      group:
+        name: docker
+        state: present
+
+    - name: Add the user 'souzagaabriel' to the group 'docker'
+      user:
+        name: souzagaabriel
+        groups: docker
+        append: yes
+
+    - name: Make sure docker.service service is running
+      ansible.builtin.systemd:
+        state: started
+        name: docker.service
+        enabled: yes
+
+    - name: Make sure containerd.service service is running
+      ansible.builtin.systemd:
+        state: started
+        name: containerd.service
+        enabled: yes
+    # End Docker
+
+    # Kind
+    - name: return motd to registered var kind
+      shell: |
+        curl -s  https://api.github.com/repos/kubernetes-sigs/kind/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\, | awk '{$1=$1};1'
+      register: KIND_VER
+      ignore_errors: yes
+
+    - set_fact:
+        KIND_VER={{ KIND_VER.stdout }}
+
+    - name: Download kind
+      get_url:
+        url: https://github.com/kubernetes-sigs/kind/releases/download/{{ KIND_VER }}/kind-linux-amd64
+        dest: /tmp/kind
+
+    - name: Move helm exec file to path
+      copy:
+        src: /tmp/kind
+        dest: /usr/local/bin/kind
+        mode: +x
+    # End Kind
+
+#kubectl
