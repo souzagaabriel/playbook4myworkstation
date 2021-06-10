@@ -33,12 +33,12 @@
     - name: Install the latest version packages dnf
       dnf:
         name:
-          - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-33.noarch.rpm
-          - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-33.noarch.rpm
+          - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-34.noarch.rpm
+          - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-34.noarch.rpm
           - https://github.com/ramboxapp/community-edition/releases/download/0.7.7/Rambox-0.7.7-linux-x86_64.rpm
           - https://download.teamviewer.com/download/linux/teamviewer.x86_64.rpm
           - https://zoom.us/client/latest/zoom_x86_64.rpm
-          - https://github.com/Ulauncher/Ulauncher/releases/download/5.10.0/ulauncher_5.10.0_fedora33.rpm
+          #- https://github.com/Ulauncher/Ulauncher/releases/download/5.11.0/ulauncher_5.11.0_fedora.rpm
         state: latest
         disable_gpg_check: yes
 
@@ -51,6 +51,7 @@
           - make
           - gnome-tweaks
           - vlc
+          - dnf-plugins-core
         state: latest
 
     # End packages with dnf
@@ -135,20 +136,21 @@
         state: latest
     # End VSCode
 
-    # Terraform https://www.terraform.io/docs/cli/install/yum.html
+    # Hashicorp repo Terraform https://www.terraform.io/docs/cli/install/yum.html
     - name: Download hashicorp.repo
       get_url:
         url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
         dest: /etc/yum.repos.d/hashicorp.repo
         mode: '0644'
 
-    - name: Install the latest version terraform
+    - name: Install the latest version terraform and vagrant
       dnf:
         name:
           - terraform
+          - vagrant
         update_cache: yes
         state: latest
-    # End Terraform
+    # End Terraform and vagrant
 
     # # Terraform old install
     # - name: return motd to registered var
@@ -249,3 +251,24 @@
         state: latest
         update_cache: yes
     # End kubectl
+
+    # Virtualbox
+    - name: Add virtualbox rpm_key
+      rpm_key:
+        state: present
+        key: https://www.virtualbox.org/download/oracle_vbox.asc
+
+    # Virtualbox https://www.virtualbox.org/wiki/Linux_Downloads
+    - name: Download virtualbox.repo
+      get_url:
+        url: https://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
+        dest: /etc/yum.repos.d/virtualbox.repo
+        mode: '0644'
+
+    - name: Install the latest version virtualbox
+      dnf:
+        name:
+          - VirtualBox-6.1
+        update_cache: yes
+        state: latest
+    # End Virtualbox
