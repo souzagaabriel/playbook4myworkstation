@@ -8,7 +8,8 @@
     enabled: yes
     repo_gpgcheck: yes
     gpgcheck: yes
-    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gp
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
 - name: Install kubectl package
   dnf:
     name: kubectl
