@@ -27,3 +27,9 @@
       #- dnf-plugins-core
     state: latest
 # End packages with dnf
+
+- name: Add the flathub flatpak repository remote to the user installation
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
