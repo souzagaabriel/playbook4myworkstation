@@ -1,0 +1,6 @@
+# Discord
+- name: Install the Discord flatpak
+  flatpak:
+    name: https://dl.flathub.org/repo/appstream/com.discordapp.Discord.flatpakref
+    state: present
+# End Discord

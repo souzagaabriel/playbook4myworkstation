@@ -1,0 +1,12 @@
+# rke
+- name: Extract rke into /tmp
+  get_url:
+    url: https://github.com/rancher/rke/releases/latest/download/rke_linux-amd64
+    dest: /tmp
+    remote_src: ye
+- name: Move eksctl exec file to path
+  copy:
+    src: /tmp/rke_linux-amd64
+    dest: /usr/local/bin/rke
+    mode: +x
+# End rke

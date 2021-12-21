@@ -1,0 +1,6 @@
+# Spotify
+- name: Install the Spotify flatpak
+  flatpak:
+    name: https://dl.flathub.org/repo/appstream/com.spotify.Client.flatpakref
+    state: present
+# End Spotify

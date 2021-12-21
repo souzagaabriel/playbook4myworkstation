@@ -1,0 +1,6 @@
+# Stremio
+- name: Install the Stremio flatpak
+  flatpak:
+    name: https://dl.flathub.org/repo/appstream/com.stremio.Stremio.flatpakref
+    state: present
+# End Stremio

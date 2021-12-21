@@ -1,0 +1,28 @@
+# Hashicorp repo Terraform https://www.terraform.io/docs/cli/install/yum.html
+- name: Download hashicorp.repo
+  get_url:
+    url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+    dest: /etc/yum.repos.d/hashicorp.repo
+    mode: '0644'
+- name: Install the latest version terraform and vagrant
+  dnf:
+    name:
+      - terraform
+      - vagrant
+    update_cache: yes
+    state: latest
+# End Terraform and vagrant
+# # Terraform old install
+# - name: return motd to registered var
+#   shell: |
+#     curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\,\v | awk '{$1=$1};1'
+#   register: TER_VER
+#   ignore_errors: yes
+# - set_fact:
+#     TER_VER={{ TER_VER.stdout }}
+# - name: Extract terraform*.tgz into /usr/local/bin/
+#   unarchive:
+#     src: https://releases.hashicorp.com/terraform/{{ TER_VER }}/terraform_{{ TER_VER }}_linux_amd64.zip
+#     dest: /usr/local/bin/
+#     remote_src: yes
+# # End Terraform old install

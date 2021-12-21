@@ -1,0 +1,7 @@
+# Install some packages with dnf
+- name: Install the latest version packages dnf
+  dnf:
+    name:
+      - https://download.teamviewer.com/download/linux/teamviewer.x86_64.rpm
+    state: latest
+    disable_gpg_check: yes

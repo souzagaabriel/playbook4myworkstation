@@ -1,0 +1,35 @@
+# Docker
+- name: Add docker-ce repo with dnf config-manager
+  shell: |
+    dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  ignore_errors: yes
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+- name: Install the latest version docker
+  dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    update_cache: yes
+    state: latest
+- name: Ensure group "docker" exists
+  group:
+    name: docker
+    state: present
+- name: Add the user 'souzagaabriel' to the group 'docker'
+  user:
+    name: souzagaabriel
+    groups: docker
+    append: yes
+- name: Make sure docker.service service is running
+  ansible.builtin.systemd:
+    state: started
+    name: docker.service
+    enabled: yes
+- name: Make sure containerd.service service is running
+  ansible.builtin.systemd:
+    state: started
+    name: containerd.service
+    enabled: yes
+# End Docker

@@ -1,0 +1,13 @@
+
+# Virtualization
+- name: Make sure libvirtd service is running
+  ansible.builtin.systemd:
+    state: started
+    name: libvirtd
+    enabled: yes
+
+- name: Install the 'Virtualization' package group
+  dnf:
+    name: '@virtualization'
+    state: latest
+# End Virtualization

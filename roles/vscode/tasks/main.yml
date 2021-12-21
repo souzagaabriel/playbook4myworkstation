@@ -1,0 +1,20 @@
+# VSCode
+- rpm_key:
+    state: present
+    key: https://packages.microsoft.com/keys/microsoft.asc
+- name: Add code repositories
+  yum_repository:
+    name: vscode
+    description: Visual Studio Code
+    file: external_repos
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    gpgcheck: yes
+    enabled: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+- name: Install the latest version vscode
+  dnf:
+    name:
+      - code
+    update_cache: yes
+    state: latest
+# End VSCode

@@ -1,0 +1,14 @@
+---
+
+# eksctl
+- name: Extract eksctl*.tar.gz into /tmp
+  unarchive:
+    src: https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz
+    dest: /tmp
+    remote_src: yes
+- name: Move eksctl exec file to path
+  copy:
+    src: /tmp/eksctl
+    dest: /usr/local/bin/eksctl
+    mode: +x
+# End eksctl

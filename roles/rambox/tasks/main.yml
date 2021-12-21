@@ -1,0 +1,7 @@
+# Install some packages with dnf
+- name: Install the latest version packages dnf
+  dnf:
+    name:
+      - https://github.com/ramboxapp/community-edition/releases/download/0.7.7/Rambox-0.7.7-linux-x86_64.rpm
+    state: latest
+    disable_gpg_check: yes

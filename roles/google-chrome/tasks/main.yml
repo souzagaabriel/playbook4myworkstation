@@ -1,0 +1,12 @@
+# Enable repositories
+- name: Enable Google Chrome repository
+  ansible.builtin.lineinfile:
+    path: /etc/yum.repos.d/google-chrome.repo
+    regexp: '^enabled=0'
+    line: enabled=
+    
+- name: Install the latest version packages dnf
+  dnf:
+    name:
+      - google-chrome-stable
+    state: latest

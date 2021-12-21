@@ -1,0 +1,6 @@
+# Install some packages with snap
+- name: Install Authy with snap with beta channel
+  snap:
+    name: authy
+    channel: beta
+# End packages with snap

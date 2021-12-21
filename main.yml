@@ -1,288 +1,48 @@
 - hosts: localhost
-  tasks:
+  roles:
+    - initial-config-and-common-packages
+    # - config-snap
+    # - authy
+    # - discord
+    # - eksctl
+    # - google-chrome
+    # - kubectl
+    # - rke
+    # - stremio
+    # - terraform-vagrant
+    # - vscode
+    # - docker
+    # - enable-virtualization
+    # - helm
+    # - kind
+    # - rambox
+    # - spotify
+    # - teamviewer
+    # - virtualbox
+    # - zoom
 
-    # Install and config snap
-    - name: Install the latest version packages snapd
-      dnf:
-        name:
-          - snapd
-        state: latest
-
-    - name: Create a symbolic link to snap
-      file:
-        src: /var/lib/snapd/snap
-        dest: /snap
-        state: link
-    # End Snap
-
-    # Install some packages with snap
-    - name: Install Authy with snap with beta channel
-      snap:
-        name: authy
-        channel: beta
-    # End packages with snap
-
-    # Enable repositories
-    - name: Enable Google Chrome repository
-      ansible.builtin.lineinfile:
-        path: /etc/yum.repos.d/google-chrome.repo
-        regexp: '^enabled=0'
-        line: enabled=1
-
-    # Install some packages with dnf
-    - name: Install the latest version packages dnf
-      dnf:
-        name:
-          - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-34.noarch.rpm
-          - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-34.noarch.rpm
-          - https://github.com/ramboxapp/community-edition/releases/download/0.7.7/Rambox-0.7.7-linux-x86_64.rpm
-          - https://download.teamviewer.com/download/linux/teamviewer.x86_64.rpm
-          - https://zoom.us/client/latest/zoom_x86_64.rpm
-          #- https://github.com/Ulauncher/Ulauncher/releases/download/5.11.0/ulauncher_5.11.0_fedora.rpm
-        state: latest
-        disable_gpg_check: yes
-
-    - name: Install the latest version packages dnf
-      dnf:
-        name:
-          - lpf-spotify-client
-          - obs-studio
-          - google-chrome-stable
-          - make
-          - gnome-tweaks
-          - vlc
-          - dnf-plugins-core
-        state: latest
-
-    # End packages with dnf
-
-    # Stremio
-    - name: Install the Stremio flatpak
-      flatpak:
-        name: https://dl.flathub.org/repo/appstream/com.stremio.Stremio.flatpakref
-        state: present
-    # End Stremio
-
-    # Virtualization
-    - name: Make sure libvirtd service is running
-      ansible.builtin.systemd:
-        state: started
-        name: libvirtd
-        enabled: yes
-
-    - name: Install the 'Virtualization' package group
-      dnf:
-        name: '@virtualization'
-        state: latest
-    # End Virtualization
-
-    # Helm
-    - name: return motd to registered var
-      shell: |
-        curl -s https://api.github.com/repos/helm/helm/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\, | awk '{$1=$1};1'
-      register: HELM_VER
-      ignore_errors: yes
-
-    - set_fact:
-        HELM_VER={{ HELM_VER.stdout }}
-
-    - name: Extract helm*.tar.gz into /tmp
-      unarchive:
-        src: https://get.helm.sh/helm-{{ HELM_VER }}-linux-amd64.tar.gz
-        dest: /tmp
-        remote_src: yes
-
-    - name: Move helm exec file to path
-      copy:
-        src: /tmp/linux-amd64/helm
-        dest: /usr/local/bin/helm
-        mode: +x
-    # End Helm
-
-    # eksctl
-    - name: Extract eksctl*.tar.gz into /tmp
-      unarchive:
-        src: https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz
-        dest: /tmp
-        remote_src: yes
-
-    - name: Move eksctl exec file to path
-      copy:
-        src: /tmp/eksctl
-        dest: /usr/local/bin/eksctl
-        mode: +x
-    # End eksctl
-
-    # VSCode
-    - rpm_key:
-        state: present
-        key: https://packages.microsoft.com/keys/microsoft.asc
-
-    - name: Add code repositories
-      yum_repository:
-        name: vscode
-        description: Visual Studio Code
-        file: external_repos
-        baseurl: https://packages.microsoft.com/yumrepos/vscode
-        gpgcheck: yes
-        enabled: yes
-        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
-
-    - name: Install the latest version vscode
-      dnf:
-        name:
-          - code
-        update_cache: yes
-        state: latest
-    # End VSCode
-
-    # Hashicorp repo Terraform https://www.terraform.io/docs/cli/install/yum.html
-    - name: Download hashicorp.repo
-      get_url:
-        url: https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-        dest: /etc/yum.repos.d/hashicorp.repo
-        mode: '0644'
-
-    - name: Install the latest version terraform and vagrant
-      dnf:
-        name:
-          - terraform
-          - vagrant
-        update_cache: yes
-        state: latest
-    # End Terraform and vagrant
-
-    # # Terraform old install
-    # - name: return motd to registered var
-    #   shell: |
-    #     curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\,\v | awk '{$1=$1};1'
-    #   register: TER_VER
-    #   ignore_errors: yes
-
-    # - set_fact:
-    #     TER_VER={{ TER_VER.stdout }}
-
-    # - name: Extract terraform*.tgz into /usr/local/bin/
-    #   unarchive:
-    #     src: https://releases.hashicorp.com/terraform/{{ TER_VER }}/terraform_{{ TER_VER }}_linux_amd64.zip
-    #     dest: /usr/local/bin/
-    #     remote_src: yes
-    # # End Terraform old install
+# [souzagaabriel@fedora ~]$ gnome-extensions list
+# sound-output-device-chooser@kgshank.net
+# apps-menu@gnome-shell-extensions.gcampax.github.com
+# appindicatorsupport@rgcjonas.gmail.com
+# background-logo@fedorahosted.org
+# launch-new-instance@gnome-shell-extensions.gcampax.github.com
+# places-menu@gnome-shell-extensions.gcampax.github.com
+# window-list@gnome-shell-extensions.gcampax.github.com
+# user-theme@gnome-shell-extensions.gcampax.github.com
 
 
-    # Docker
-    - name: Add docker-ce repo with dnf config-manager
-      shell: |
-        dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-      ignore_errors: yes
-      args:
-        creates: /etc/yum.repos.d/docker-ce.repo
 
-    - name: Install the latest version docker
-      dnf:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        update_cache: yes
-        state: latest
 
-    - name: Ensure group "docker" exists
-      group:
-        name: docker
-        state: present
 
-    - name: Add the user 'souzagaabriel' to the group 'docker'
-      user:
-        name: souzagaabriel
-        groups: docker
-        append: yes
 
-    - name: Make sure docker.service service is running
-      ansible.builtin.systemd:
-        state: started
-        name: docker.service
-        enabled: yes
 
-    - name: Make sure containerd.service service is running
-      ansible.builtin.systemd:
-        state: started
-        name: containerd.service
-        enabled: yes
-    # End Docker
 
-    # Kind
-    - name: return motd to registered var kind
-      shell: |
-        curl -s  https://api.github.com/repos/kubernetes-sigs/kind/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\, | awk '{$1=$1};1'
-      register: KIND_VER
-      ignore_errors: yes
 
-    - set_fact:
-        KIND_VER={{ KIND_VER.stdout }}
 
-    - name: Download kind
-      get_url:
-        url: https://github.com/kubernetes-sigs/kind/releases/download/{{ KIND_VER }}/kind-linux-amd64
-        dest: /tmp/kind
 
-    - name: Move helm exec file to path
-      copy:
-        src: /tmp/kind
-        dest: /usr/local/bin/kind
-        mode: +x
-    # End Kind
 
-    # Kubectl
-    - name: Add kubernetes repositories
-      yum_repository:
-        name: Kubernetes
-        description: Kubernetes YUM repo
-        file: kubernetes
-        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-        enabled: yes
-        repo_gpgcheck: yes
-        gpgcheck: yes
-        gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
-    - name: Install kubectl package
-      dnf:
-        name: kubectl
-        state: latest
-        update_cache: yes
-    # End kubectl
 
-    # Virtualbox
-    - name: Add virtualbox rpm_key
-      rpm_key:
-        state: present
-        key: https://www.virtualbox.org/download/oracle_vbox.asc
 
-    # Virtualbox https://www.virtualbox.org/wiki/Linux_Downloads
-    - name: Download virtualbox.repo
-      get_url:
-        url: https://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
-        dest: /etc/yum.repos.d/virtualbox.repo
-        mode: '0644'
 
-    - name: Install the latest version virtualbox
-      dnf:
-        name:
-          - VirtualBox-6.1
-        update_cache: yes
-        state: latest
-    # End Virtualbox
-
-    # rke
-    - name: Extract rke into /tmp
-      get_url:
-        url: https://github.com/rancher/rke/releases/latest/download/rke_linux-amd64
-        dest: /tmp
-        remote_src: yes
-
-    - name: Move eksctl exec file to path
-      copy:
-        src: /tmp/rke_linux-amd64
-        dest: /usr/local/bin/rke
-        mode: +x
-    # End rke

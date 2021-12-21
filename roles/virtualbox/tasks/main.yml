@@ -1,0 +1,19 @@
+# Virtualbox
+- name: Add virtualbox rpm_key
+  rpm_key:
+    state: present
+    key: https://www.virtualbox.org/download/oracle_vbox.asc
+    
+# Virtualbox https://www.virtualbox.org/wiki/Linux_Downloads
+- name: Download virtualbox.repo
+  get_url:
+    url: https://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
+    dest: /etc/yum.repos.d/virtualbox.repo
+    mode: '0644'
+- name: Install the latest version virtualbox
+  dnf:
+    name:
+      - VirtualBox-6.1
+    update_cache: yes
+    state: latest
+# End Virtualbox

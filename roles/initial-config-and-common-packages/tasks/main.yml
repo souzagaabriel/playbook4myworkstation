@@ -1,0 +1,29 @@
+# Install some packages with dnf
+- name: Install the latest version packages dnf
+  dnf:
+    name:
+      - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-34.noarch.rpm
+      - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-34.noarch.rpm
+    state: latest
+    disable_gpg_check: yes
+  when: ( ansible_distribution == "Fedora" and ansible_distribution_version == "34" )
+
+- name: Install the latest version packages dnf
+  dnf:
+    name:
+      - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-35.noarch.rpm
+      - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-35.noarch.rpm
+    state: latest
+    disable_gpg_check: yes
+  when: ( ansible_distribution == "Fedora" and ansible_distribution_version == "35" )
+
+- name: Install the latest version packages dnf
+  dnf:
+    name:
+      #- obs-studio
+      #- make
+      - gnome-tweaks
+      #- vlc
+      #- dnf-plugins-core
+    state: latest
+# End packages with dnf

@@ -1,0 +1,18 @@
+# Kind
+- name: return motd to registered var kind
+  shell: |
+    curl -s  https://api.github.com/repos/kubernetes-sigs/kind/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\, | awk '{$1=$1};1'
+  register: KIND_VER
+  ignore_errors: yes
+- set_fact:
+    KIND_VER={{ KIND_VER.stdout }}
+- name: Download kind
+  get_url:
+    url: https://github.com/kubernetes-sigs/kind/releases/download/{{ KIND_VER }}/kind-linux-amd64
+    dest: /tmp/kind
+- name: Move helm exec file to path
+  copy:
+    src: /tmp/kind
+    dest: /usr/local/bin/kind
+    mode: +x
+# End Kind
