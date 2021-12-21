@@ -1,25 +1,25 @@
 - hosts: localhost
   roles:
     - initial-config-and-common-packages
-    # - config-snap
-    # - authy
-    # - discord
-    # - eksctl
-    # - google-chrome
-    # - kubectl
-    # - rke
-    # - stremio
-    # - terraform-vagrant
-    # - vscode
-    # - docker
-    # - enable-virtualization
-    # - helm
-    # - kind
-    # - rambox
-    # - spotify
-    # - teamviewer
-    # - virtualbox
-    # - zoom
+    - config-snap
+    - authy
+    - discord
+    - eksctl
+    - google-chrome
+    - kubectl
+    - rke
+    - stremio
+    - terraform-vagrant
+    - vscode
+    - docker
+    - enable-virtualization
+    - helm
+    - kind
+    - rambox
+    - spotify
+    - teamviewer
+    - virtualbox
+    - zoom
 
 # [souzagaabriel@fedora ~]$ gnome-extensions list
 # sound-output-device-chooser@kgshank.net
